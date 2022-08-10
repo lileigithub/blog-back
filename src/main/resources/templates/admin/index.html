@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客列表</title>
+    <link rel="stylesheet" href="../../static/css/semantic.min.css" th:href="@{/css/semantic.min.css}">
+    <link rel="stylesheet" href="../../static/css/me.css" th:href="@{/css/me.css}">
+</head>
+<body>
+<!--导航-->
+<nav class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
+    <div class="ui inverted menu secondary stackable">
+        <div class="ui container">
+            <h2 class="ui teal header item">管理后台</h2>
+            <a href="#" class="active item m-mobile-hide m-item"><i class="home icon small"></i>博客</a>
+            <a href="#" class="item m-mobile-hide m-item"><i class="idea icon small"></i>分类</a>
+            <a href="#" class="item m-mobile-hide m-item"><i class="tags icon small"></i>标签</a>
+            <div class="right menu m-mobile-hide m-item">
+                <div class="ui item dropdown">
+                    <div class="text">
+                    <img src="https://img.temp.im/100x100/09f/fff" alt="" class="ui avatar image">
+                    lilei
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a href="#" class="item" th:href="@{/admin/logout}">
+                            退出
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="ui button icon black m-right-top m-mobile-show menu toggle">
+        <i class="sidebar icon"></i>
+    </a>
+</nav>
+<!--二级导航-->
+<div class="ui attached menu pointing">
+    <div class="ui container">
+        <div class="ui right menu">
+            <a href="#" class="item">发布</a>
+            <a href="#" class="item active">列表</a>
+        </div>
+    </div>
+
+</div>
+<!--中间内容-->
+<div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="m-padded-tb-large m-padded-tb-massive">
+        <div class="ui container">
+            <div class="ui success large message">
+                <h3>hi</h3>
+                <p>已登录</p>
+            </div>
+
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+
+</div>
+<!--底部-->
+<footer class="ui inverted vertical segment m-padded-tb-massive">
+    <div class="ui container center aligned">
+        <div class="ui grid divided inverted stackable">
+            <div class="three wide column">
+                <div class="ui inverted link list">
+                    <div class="item">
+
+                <img src="../../static/images/qrcode_www.bilibili.com.png" class="ui image rounded" alt="" style="width:100px" th:src="@{/images/qrcode_www.bilibili.com.png}">
+                    </div>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui header inverted m-text-lined m-text-spaced m-opacity-mini">最新博客</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item">博客</a>
+                    <a href="#" class="item">博客</a>
+                    <a href="#" class="item">博客</a>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui header inverted m-text-lined m-text-spaced m-opacity-mini">联系我</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item">博客</a>
+                    <a href="#" class="item">博客</a>
+                    <a href="#" class="item">博客</a>
+                </div>
+            </div>
+            <div class="seven wide column">
+                <h4 class="ui header inverted m-text-lined m-text-spaced m-opacity-mini">介绍</h4>
+                <p class="m-text-lined m-text-spaced m-text-thin m-opacity-mini">哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</p>
+            </div>
+        </div>
+        <div class="ui inverted section divider"></div>
+        <p class="m-text-lined m-text-spaced m-text-thin m-opacity-mini">CopyRight</p>
+    </div>
+
+</footer>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" ></script>
+<script src="../../static/js/semantic.min.js" th:src="@{/js/semantic.min.js}"></script>
+<script>
+    $('.menu.toggle').click(function (){
+        $('.m-item').toggleClass("m-mobile-hide");
+    })
+    $('.ui.dropdown')
+        .dropdown()
+    ;
+</script>
+</body>
+</html>
