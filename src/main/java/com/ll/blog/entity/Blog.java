@@ -1,6 +1,7 @@
 package com.ll.blog.entity;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "t_blog")
+@ToString
 public class Blog {
 
     @Id
@@ -22,6 +24,8 @@ public class Blog {
     /**
      * 内容
      */
+    @Basic(fetch = FetchType.LAZY)
+    @Lob
     private String content;
     /**
      * 首图
@@ -52,6 +56,10 @@ public class Blog {
      */
     private boolean published;
     /**
+     * 推荐
+     */
+    private boolean recommend;
+    /**
      * 创建时间
      */
     @Temporal(TemporalType.TIMESTAMP)
@@ -67,6 +75,9 @@ public class Blog {
 
     @ManyToMany(cascade = CascadeType.PERSIST) //级联新增
     private List<Tag> tags = new ArrayList<>();
+
+    @Transient
+    private String tagIds;
 
     @ManyToOne
     private User user;

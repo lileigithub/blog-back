@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<!-- Nav bar-->
+<nav th:fragment="menu(n)" class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
+    <div class="ui inverted menu secondary stackable">
+        <div class="ui container">
+            <h2 class="ui teal header item">管理后台</h2>
+            <a href="#" th:href="@{/admin/blogs}" class="item m-mobile-hide m-item" th:classappend="${n==1} ? 'active'"><i class="home icon small"></i>博客</a>
+            <a href="#" th:href="@{/admin/types}" class="item m-mobile-hide m-item" th:classappend="${n==1} ? 'active'"><i class="idea icon small"></i>分类</a>
+            <a href="#" th:href="@{/admin/tags}" class="item m-mobile-hide m-item" th:classappend="${n==1} ? 'active'"><i class="tags icon small"></i>标签</a>
+            <div class="right menu m-mobile-hide m-item">
+                <div class="ui item dropdown">
+                    <div class="text">
+                        <img src="https://img.temp.im/100x100/09f/fff" th:src="@{${session.user.avatar}}" alt="" class="ui avatar image">
+                        <span th:text="${session.user.nickname}"> </span>
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a href="#" class="item">
+                            退出
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="ui button icon black m-right-top m-mobile-show menu toggle">
+        <i class="sidebar icon"></i>
+    </a>
+</nav>
+<!-- Sub bar-->
+<div th:fragment="subbar" class="ui attached inverted pointing menu m-opacity-small">
+    <div class="ui container">
+        <div class="right menu">
+            <a href="#" class="item">Upload</a>
+            <a href="#" class="active olive item">List</a>
+        </div>
+    </div>
+</div>
+
+<!--footer-->
+<footer th:fragment="footer" class="ui inverted vertical segment m-padded-tb-mid m-opacity-mini">
+    <div class="ui center aligned container">
+        <h5 class="ui inverted header m-text-spaced m-opacity-mid"><span style="color: #6BB6A1"><i class="envelope icon"></i>contact</span></h5>
+        <small class="m-text-spaced m-opacity-big"><span style="color: #6BB6A1">Copyright &copy; shell845</span></small>
+    </div>
+</footer>
+
+<!-- JavaScript -->
+<th:block th:fragment="script">
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js" crossorigin="anonymous"></script>
+    <!-- prism -->
+    <script src="../static/lib/prism/prism.js" th:src="@{/lib/prism/prism.js}"></script>
+    <!-- mark down-->
+    <script src="../../static/lib/editormd/editormd.min.js" th:src="@{/lib/editormd/editormd.min.js}"></script>
+    <!-- customize -->
+    <script>
+        $('.menu.toggle').click(function () {
+            $('.m-item').toggleClass('m-mobile-hide');
+        });
+
+        $('.ui.dropdown').dropdown({
+            on : 'hover'
+        });
+
+        //close notification
+        $('.message .close')
+            .on('click', function () {
+                $(this)
+                    .closest('.message')
+                    .transition('fade');
+            });
+    </script>
+</th:block>
+</body>
+</html>

@@ -31,11 +31,16 @@ public class LoginController {
         if(user != null){
             user.setPassword(null);
             session.setAttribute("user", user);
-            return "admin/index";
+            return "redirect:/admin/index";
         }else {
             redirectAttributes.addFlashAttribute("message", "用户名密码错误");
             return "redirect:/admin";
         }
+    }
+
+    @GetMapping("/index")
+    public String adminIndexPage() {
+        return "/admin/index";
     }
 
     @GetMapping("/logout")

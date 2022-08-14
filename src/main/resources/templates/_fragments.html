@@ -1,10 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:fragment="head(title)">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
+    <!-- Semantic CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <!-- mark down -->
+    <link rel="stylesheet" href="../../static/lib/editormd/css/editormd.min.css" th:href="@{/lib/editormd/css/editormd.min.css}">
+    <!-- typo -->
+    <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/css/typo.css}">
+    <!-- prism -->
+    <link rel="stylesheet" href="../static/lib/prism/prism.css" th:href="@{/lib/prism/prism.css}">
+    <!-- Customize CSS -->
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+    <!--link rel="stylesheet" href="../static/lib/semantic-ui/semantic.css" th:href="@{/lib/semantic-ui/semantic.css}"-->
+    <link rel="stylesheet" href="../static/css/homepage.css" th:href="@{/css/homepage.css}">
+
+    <!--title-->
+    <title th:replace="${title}">fragments</title>
 </head>
+
 <body>
+<!-- Nav bar-->
+<nav th:fragment="menu(n)">
+    <div class="ui secondary pointing menu">
+        <a href="#" th:href="@{/}" class="ui logo item">Shell845</a>
+        <a href="#" th:href="@{/}" class="m-item item m-mobile-hide" th:classappend="${n==1} ? 'active'"><i class="fas fa-home"></i>Home</a>
+        <a href="#" th:href="@{/categories/-1}" class="m-item item m-mobile-hide" th:classappend="${n==2} ? 'active'"><i class="fas fa-bookmark"></i> Categories</a>
+        <a href="#" th:href="@{/tags/-1}" class="m-item item m-mobile-hide" th:classappend="${n==3} ? 'active'"><i class="fas fa-tag"></i> Tags</a>
+        <a href="#" th:href="@{/archives}" class="m-item item m-mobile-hide" th:classappend="${n==4} ? 'active'"><i class="fas fa-history"></i> Archives</a>
+        <div class="m-item right item">
+            <form name="search" action="#" method="post" th:action="@{/search}">
+                <div class="ui icon inverted transparent input">
+                    <input type="text" name="query" placeholder="Search..." th:value="${query}">
+                    <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+                </div>
+            </form>
+        </div>
+        <!--div class="right m-item item menu-item-search">
+            <form name="search" action="#" th:action="@{/search}" method="post" >
+                <div class="ui icon inverted transparent input m-margin-tb-tiny">
+                    <input type="text" name="query" placeholder="Search. abc..." th:value="${query}">
+                    <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+                </div>
+            </form>
+        </div-->
+    </div>
+    <!--a href="#" class="ui menu toggle icon inverted m-top-right button m-mobile-display m-opacity-small">
+      <i class="fas fa-bars m-poolside"></i>
+    </a-->
+</nav>
+
+<!--footer-->
+<footer th:fragment="footer" class="ui inverted footer vertical segment center">
+    <div class="ui stackable center aligned page grid m-opacity-small">
+        <div class="row">
+            <div class="column">
+                <h5 class="ui inverted header m-opacity-small">Contact: <span th:text="#{index.email}">email</span></h5>
+                <div class="ui inverted link list">
+                    <small class="mini item m-opacity-small" th:text="#{footer.copyright}">copyright</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- JavaScript -->
+<th:block th:fragment="script">
+    <!-- jQuery first-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+    <!-- prism -->
+    <script src="../static/lib/prism/prism.js" th:src="@{/lib/prism/prism.js}"></script>
+    <!-- customize -->
+    <!--script src="../static/js/homepage.js" th:src="@{/js/homepage.js}"></script-->
+    <!--script src="../static/lib/semantic-ui/semantic.js" th:src="@{/lib/semantic-ui/semantic.js}"></script-->
+    <script>
+        $('.menu.toggle').click(function () {
+            $('.m-item').toggleClass('m-mobile-hide');
+        });
+
+        $('.ui.dropdown').dropdown({
+            on : 'hover'
+        });
+
+        $('#sponsorButton').popup({
+            popup: $('.sponsorPopup.popup'),
+            on: 'click',
+            position: 'bottom center'
+        });
+    </script>
+</th:block>
 
 </body>
 </html>

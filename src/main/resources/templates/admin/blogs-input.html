@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>发布</title>
-    <link rel="stylesheet" href="../../static/css/semantic.min.css">
-    <link rel="stylesheet" href="../../static/css/me.css">
-    <link rel="stylesheet" href="../../static/lib/editormd/css/editormd.min.css" />
+    <link rel="stylesheet" href="../../static/css/semantic.min.css" th:href="@{/css/semantic.min.css}">
+    <link rel="stylesheet" href="../../static/css/me.css" th:href="@{/css/me.css}">
+    <link rel="stylesheet" href="../../static/lib/editormd/css/editormd.min.css" th:href="@{/lib/editormd/css/editormd.min.css}"/>
 </head>
 <body>
 <!--导航-->
-<nav class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
+<nav th:replace="admin/_fragments :: menu(1)" class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
     <div class="ui inverted menu secondary stackable">
         <div class="ui container">
             <h2 class="ui teal header item">管理后台</h2>
@@ -51,7 +51,8 @@
 <div>
     <div class="m-padded-tb-large">
         <div class="ui container">
-            <form action="#" method="post" class="ui form">
+            <form id="blog-form" action="#" th:action="@{/admin/blogs}" method="post" class="ui form">
+                <input type="hidden" name="published">
                 <div class="field required">
                     <div class="ui left labeled input">
                         <div class="ui selection dropdown teal label basic compact">
@@ -67,42 +68,9 @@
                         <input type="text" name="title" placeholder="标题">
                     </div>
                 </div>
-                <div class="field">
+                <div class="field required">
                     <div id="md-content"style="z-index: 1 !important;">
-                        <textarea name="content" placeholder="内容" style="display:none;">[TOC]
-
-#### Disabled options
-
-- TeX (Based on KaTeX);
-- Emoji;
-- Task lists;
-- HTML tags decode;
-- Flowchart and Sequence Diagram;
-
-#### Editor.md directory
-
-    editor.md/
-            lib/
-            css/
-            scss/
-            tests/
-            fonts/
-            images/
-            plugins/
-            examples/
-            languages/
-            editormd.js
-            ...
-
-```html
-&lt;!-- English --&gt;
-&lt;script src="../dist/js/languages/en.js"&gt;&lt;/script&gt;
-
-&lt;!-- 繁體中文 --&gt;
-&lt;script src="../dist/js/languages/zh-tw.js"&gt;&lt;/script&gt;
-```
-
-                        </textarea>
+                        <textarea name="content" placeholder="内容" style="display:none;"></textarea>
                     </div>
 
                 </div>
@@ -111,12 +79,11 @@
                         <div class="ui left labeled action input">
                             <label class="ui compact teal basic label">分类</label>
                             <div class="ui fluid selection dropdown">
-                                <input type="hidden" name="type">
+                                <input type="hidden" name="type.id">
                                 <i class="dropdown icon"></i>
                                 <div class="default text">选择分类</div>
                                 <div class="menu">
-                                    <div class="item" data-value="分类">分类1</div>
-                                    <div class="item" data-value="分类2">分类2</div>
+                                    <div th:each="type: ${types}"class="item" th:data-value="${type.id}" data-value="1" th:text="${type.name}">分类1</div>
                                 </div>
                             </div>
                         </div>
@@ -126,11 +93,10 @@
                             <label class="ui compact teal basic label">标签</label>
                             <div class="ui fluid multiple search selection dropdown">
                                 <input type="hidden">
-                                <i class="dropdown icon" name="tag"></i>
+                                <i class="dropdown icon" name="tagIds"></i>
                                 <div class="default text">选择标签</div>
                                 <div class="menu">
-                                    <div class="item" data-value="标签1">标签1</div>
-                                    <div class="item" data-value="标签2">标签2</div>
+                                    <div th:each="tag: ${tags}"class="item" th:data-value="${tag.id}" data-value="1" th:text="${tag.name}">标签1</div>
                                 </div>
                             </div>
                         </div>
@@ -139,7 +105,7 @@
                 <div class="field">
                     <div class="ui left labeled input">
                         <label class="ui teal basic label">首图</label>
-                        <input type="text" name="indexPicture" placeholder="首图引用地址">
+                        <input type="text" name="firstPicture" placeholder="首图引用地址">
                     </div>
 
                 </div>
@@ -152,7 +118,7 @@
                     </div>
                     <div class="field">
                         <div class="ui checkbox">
-                            <input type="checkbox" name="shareInfo" id="shareInfo" class="hidden">
+                            <input type="checkbox" name="shareStatement" id="shareInfo" class="hidden">
                             <label for="shareInfo">转载声明</label>
                         </div>
                     </div>
@@ -164,7 +130,7 @@
                     </div>
                     <div class="field">
                         <div class="ui checkbox">
-                            <input type="checkbox" name="comment" id="comment" class="hidden">
+                            <input type="checkbox" name="commentabled" id="comment" class="hidden">
                             <label for="comment">评论</label>
                         </div>
                     </div>
@@ -172,8 +138,8 @@
                 <div class="ui error message"></div>
                 <div class="ui container right aligned">
                     <button type="button" class="ui button" onclick="window.history.go(-1)">返回</button>
-                    <button class="ui secondary button">保存</button>
-                    <button class="ui teal button">发布</button>
+                    <button id="save-btn" class="ui secondary button">保存</button>
+                    <button id="publish-btn" class="ui teal button">发布</button>
                 </div>
                 
 
@@ -190,7 +156,7 @@
                 <div class="ui inverted link list">
                     <div class="item">
 
-                <img src="../../static/images/qrcode_www.bilibili.com.png" class="ui image rounded" alt="" style="width:100px">
+                <img src="https://img.temp.im/100x100/09f/fff" class="ui image rounded" alt="" style="width:100px">
                     </div>
                 </div>
             </div>
@@ -220,9 +186,9 @@
     </div>
 
 </footer>
-<script src="../../static/js/jquery-3.1.1.min.js"></script>
-<script src="../../static/js/semantic.min.js"></script>
-<script src="../../static/lib/editormd/editormd.min.js"></script>
+<script src="../../static/js/jquery-3.1.1.min.js" th:src="@{/js/jquery-3.1.1.min.js}"></script>
+<script src="../../static/js/semantic.min.js" th:src="@{/js/semantic.min.js}"></script>
+<script src="../../static/lib/editormd/editormd.min.js" th:src="@{/lib/editormd/editormd.min.js}"></script>
 <script>
     var mdEditor;
 
@@ -231,7 +197,7 @@
             width   : "100%",
             height  : 640,
             syncScrolling : "single",
-            path    : "../static/lib/editormd/lib/"
+            path    : "/lib/editormd/lib/"
         });
     });
     $('.menu.toggle').click(function (){
@@ -246,9 +212,24 @@
                     type: 'empty',
                     prompt: '标题: 请输入标题'
                 }]
+            },
+            title: {
+                identifier: 'content',
+                rules: [{
+                    type: 'empty',
+                    prompt: '标题: 请输入内容'
+                }]
             }
         }
     })
+    $('#save-btn').click(function (){
+        $('[name=published]').val(false);
+        $('#blog-form').submit();
+    });
+    $('#publish-btn').click(function (){
+        $('[name=published]').val(true);
+        $('#blog-form').submit();
+    });
 
 </script>
 </body>
