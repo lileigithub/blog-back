@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>分类新增</title>
+    <title>标签新增</title>
     <link rel="stylesheet" href="../../static/css/semantic.min.css" th:href="@{/css/semantic.min.css}">
     <link rel="stylesheet" href="../../static/css/me.css" th:href="@{/css/me.css}">
 </head>
 <body>
 <!--导航-->
-<nav th:replace="admin/_fragments :: menu(2)" class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
+<nav th:replace="admin/_fragments :: menu(3)" class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
     <div class="ui inverted menu secondary stackable">
         <div class="ui container">
             <h2 class="ui teal header item">管理后台</h2>
@@ -50,12 +50,12 @@
 <div>
     <div class="m-padded-tb-large">
         <div class="ui container">
-            <form action="#" th:action="@{/admin/types}" method="post" class="ui form">
+            <form action="#" th:action="@{/admin/tags}" method="post" class="ui form">
                 <div class="field required">
                     <div class="ui left labeled input">
-                        <input name="id" type="hidden" th:value="${type.id}">
-                        <label class="ui teal basic label">分类名称</label>
-                        <input type="text" name="name" th:value="${type.name}" placeholder="分类名称">
+                        <input name="id" type="hidden" th:value="${tag.id}">
+                        <label class="ui teal basic label">标签名称</label>
+                        <input type="text" name="name" th:value="${tag.name}" placeholder="标签名称">
                     </div>
                 </div>
                 <div class="ui error message"></div>

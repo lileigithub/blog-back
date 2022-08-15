@@ -8,8 +8,8 @@
         <div class="ui container">
             <h2 class="ui teal header item">管理后台</h2>
             <a href="#" th:href="@{/admin/blogs}" class="item m-mobile-hide m-item" th:classappend="${n==1} ? 'active'"><i class="home icon small"></i>博客</a>
-            <a href="#" th:href="@{/admin/types}" class="item m-mobile-hide m-item" th:classappend="${n==1} ? 'active'"><i class="idea icon small"></i>分类</a>
-            <a href="#" th:href="@{/admin/tags}" class="item m-mobile-hide m-item" th:classappend="${n==1} ? 'active'"><i class="tags icon small"></i>标签</a>
+            <a href="#" th:href="@{/admin/types}" class="item m-mobile-hide m-item" th:classappend="${n==2} ? 'active'"><i class="idea icon small"></i>分类</a>
+            <a href="#" th:href="@{/admin/tags}" class="item m-mobile-hide m-item" th:classappend="${n==3} ? 'active'"><i class="tags icon small"></i>标签</a>
             <div class="right menu m-mobile-hide m-item">
                 <div class="ui item dropdown">
                     <div class="text">
@@ -18,7 +18,7 @@
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <a href="#" class="item">
+                        <a href="#" th:href="@{/admin/logout}" class="item">
                             退出
                         </a>
                     </div>

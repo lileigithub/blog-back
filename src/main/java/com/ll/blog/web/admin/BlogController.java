@@ -15,6 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -74,6 +75,27 @@ public class BlogController {
         }else {
             redirectAttributes.addFlashAttribute("message","操作成功");
         }
+        return "redirect:/admin/blogs";
+    }
+
+    /**
+     * 跳转到编辑页面
+     * @param id
+     * @param model
+     * @return
+     */
+    @GetMapping("/blogs/{id}/input")
+    public String editInput(@PathVariable Long id, Model model) {
+        model.addAttribute("blog", blogService.get(id));
+        model.addAttribute("types", typeService.findAll());
+        model.addAttribute("tags", tagService.findAll());
+        return "admin/blogs-input";
+    }
+
+    @GetMapping("/blogs/{id}/delete")
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes){
+        blogService.delete(id);
+        redirectAttributes.addFlashAttribute("message","删除成功");
         return "redirect:/admin/blogs";
     }
 }

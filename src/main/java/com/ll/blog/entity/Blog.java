@@ -40,6 +40,10 @@ public class Blog {
      */
     private Integer views;
     /**
+     * 描述
+     */
+    private String description;
+    /**
      * 赞赏开启
      */
     private boolean appreciation;

@@ -40,8 +40,8 @@
 <div class="ui attached menu pointing">
     <div class="ui container">
         <div class="ui right menu">
-            <a href="#" class="item">发布</a>
-            <a href="#" class="item active">列表</a>
+            <a href="#" th:href="@{/admin/blogs/input}" class="item">发布</a>
+            <a href="#" th:href="@{/admin/blogs}" class="item active">列表</a>
         </div>
     </div>
 
@@ -57,17 +57,20 @@
                         <input type="text" name="title" placeholder="标题">
                     </div>
                     <div class="field">
-                        <div class="ui selection dropdown">
-                            <input type="hidden" name="typeId">
-                            <i class="dropdown icon"></i>
-                            <div class="default text">分类</div>
-                            <div class="menu">
-                                <div th:each="type: ${types}"class="item" th:data-value="${type.id}" data-value="1" th:text="${type.name}">分类1</div>
-                                <!--/*-->
-                                <div class="item" data-value="2">分类2</div>
-                                <!--*/-->
+                        <div class="ui labeled action input">
+                            <div class="ui selection dropdown type">
+                                <input type="hidden" name="typeId">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">分类</div>
+                                <div class="menu">
+                                    <div th:each="type: ${types}"class="item" th:data-value="${type.id}" data-value="1" th:text="${type.name}">分类1</div>
+                                    <!--/*-->
+                                    <div class="item" data-value="2">分类2</div>
+                                    <!--*/-->
+                                </div>
                             </div>
                         </div>
+                        <button class="ui compact button clear">clear</button>
                     </div>
                     <div class="field">
                         <div class="ui checkbox">
@@ -87,6 +90,7 @@
                         <th>标题</th>
                         <th>分类</th>
                         <th>推荐</th>
+                        <th>状态</th>
                         <th>更新时间</th>
                         <th>操作</th>
                     </tr></thead>
@@ -96,6 +100,7 @@
                         <td th:text="${blog.title}">标题名称</td>
                         <td th:text="${blog.type.name}">分类名称</td>
                         <td th:text="${blog.recommend} ? '是':'否'">是</td>
+                        <td th:text="${blog.published} ? '发布':'草稿'">草稿</td>
                         <td th:text="${blog.updateTime}">2022-08-01</td>
                         <td>
                             <a href="#" th:href="@{/admin/blogs/{id}/input(id=${blog.id})}" class="ui button mini basic teal">编辑</a>
@@ -105,7 +110,7 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th colspan="6">
+                        <th colspan="7">
                             <div class="ui pagination menu mini" th:if="${page.totalPages}>1">
                                 <a onclick="page(this)" data-page="${page.number}-1" class="icon item" th:unless="${page.first}">上一页</a>
                                 <a onclick="page(this)" data-page="${page.number}+1" class="item" th:unless="${page.last}">下一页</a>
@@ -196,7 +201,10 @@
     $('.message .close')
         .on('click', function (){
             $(this).closest('.message').transition('fade');
-        })
+        });
+    $('.clear.button').on('click', function (){
+        $('.ui.type.dropdown').dropdown('clear')
+    })
 </script>
 </body>
 </html>

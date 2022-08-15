@@ -14,4 +14,6 @@ public interface TypeService {
     void delete(Long id);
 
     List<Type> findAll();
+
+    List<Type> findTopByBlogSize(int i);
 }
