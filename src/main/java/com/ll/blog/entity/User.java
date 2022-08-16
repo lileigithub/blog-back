@@ -1,6 +1,7 @@
 package com.ll.blog.entity;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -32,5 +33,6 @@ public class User {
     private Date updateTime;
 
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     private List<Blog> blogs = new ArrayList<>();
 }

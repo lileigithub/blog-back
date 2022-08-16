@@ -5,6 +5,7 @@ import com.ll.blog.dao.TagRepository;
 import com.ll.blog.entity.Blog;
 import com.ll.blog.entity.Tag;
 import com.ll.blog.entity.Type;
+import com.ll.blog.util.MarkdownUtils;
 import com.ll.blog.vo.BlogQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,7 +34,7 @@ public class BlogServiceImpl implements BlogService{
     @Autowired
     TagRepository tagRepository;
     @Override
-    public Page list(Pageable pageable, BlogQuery blog) {
+    public Page listPublished(Pageable pageable, BlogQuery blog) {
         Page<Blog> all = blogRepository.findAll(new Specification<Blog>() {
             @Override
             public Predicate toPredicate(Root<Blog> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -55,8 +56,8 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public Page list(Pageable pageable) {
-        return blogRepository.findAll(pageable);
+    public Page listPublished(Pageable pageable) {
+        return blogRepository.listPublish(pageable);
     }
 
     @Transactional
@@ -87,6 +88,22 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
+    public Blog getAndConvert(Long id) {
+        Blog blog = blogRepository.findById(id).orElse(null);
+        if(blog != null){
+            List<Tag> tags = blog.getTags();
+            if(!CollectionUtils.isEmpty(tags)){
+                String collect = tags.stream().map(s -> String.valueOf(s.getId())).collect(Collectors.joining(","));
+                blog.setTagIds(collect);
+            }
+        }
+        String content = blog.getContent();
+        String html = MarkdownUtils.markdownToHtmlExtensions(content);
+        blog.setContent(html);
+        return blog;
+    }
+
+    @Override
     public void delete(Long id) {
         blogRepository.deleteById(id);
     }
@@ -96,5 +113,10 @@ public class BlogServiceImpl implements BlogService{
         Sort sort = Sort.by(Sort.Direction.DESC, "updateTime");
         Pageable pageable = PageRequest.of(0, i, sort);
         return blogRepository.listRecommentBlogTop(pageable);
+    }
+
+    @Override
+    public Page searchLikeTitleContent(String query, Pageable pageable) {
+        return blogRepository.searchLikeTitleContent(query, pageable);
     }
 }

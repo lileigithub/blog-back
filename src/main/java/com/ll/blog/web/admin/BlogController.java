@@ -37,7 +37,7 @@ public class BlogController {
 
     @GetMapping("/blogs")
     public String blogs(@PageableDefault(sort="updateTime", direction = Sort.Direction.DESC) Pageable pageable, BlogQuery blog, Model model){
-        Page list = blogService.list(pageable, blog);
+        Page list = blogService.listPublished(pageable, blog);
         model.addAttribute("page", list);
         List<Type> all = typeService.findAll();
         model.addAttribute("types", all);
@@ -46,7 +46,7 @@ public class BlogController {
 
     @PostMapping("/blogs/search")
     public String search(@PageableDefault(sort="updateTime", direction = Sort.Direction.DESC) Pageable pageable, BlogQuery blog, Model model){
-        model.addAttribute("page", blogService.list(pageable, blog));
+        model.addAttribute("page", blogService.listPublished(pageable, blog));
         return "/admin/blogs :: blogList";
     }
 
@@ -66,10 +66,14 @@ public class BlogController {
     @PostMapping("/blogs")
     public String postInput(Blog blog, HttpSession session, RedirectAttributes redirectAttributes){
         User user = (User) session.getAttribute("user");
-        blog.setType(typeService.get(blog.getType().getId()));
+        if(blog.getType() != null && blog.getType().getId() != null){
+            blog.setType(typeService.get(blog.getType().getId()));
+        }else {
+            blog.setType(null);
+        }
         blog.setTags(tagService.findByIds(blog.getTagIds()));
+        blog.setUser(user);
         Blog blog1 = blogService.save(blog);
-        blog1.setUser(user);
         if(blog1 == null){
             redirectAttributes.addFlashAttribute("message","操作失败");
         }else {

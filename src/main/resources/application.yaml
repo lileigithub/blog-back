@@ -15,3 +15,5 @@ logging:
     com.ll: debug
   file:
     name: log/blog.log
+server:
+  port: 8081

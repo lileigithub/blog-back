@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
 </head>
 <body>
 <!--导航-->
-<nav class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
+<nav th:replace="_fragments :: menu(3)" class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
     <div class="ui inverted menu secondary stackable">
         <div class="ui container">
             <h2 class="ui teal header item">Blog</h2>
@@ -254,7 +254,7 @@
 
 </footer>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="../static/js/semantic.min.js"></script>
+<script src="../static/js/semantic.min.js" th:src="@{/js/semantic.min.js}"></script>
 <script>
     $('.menu.toggle').click(function (){
         $('.m-item').toggleClass("m-mobile-hide");

@@ -9,7 +9,7 @@
 </head>
 <body>
 <!--导航-->
-<nav class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
+<nav th:replace="_fragments :: menu(1)" class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
     <div class="ui inverted menu secondary stackable">
         <div class="ui container">
             <h2 class="ui teal header item">Blog</h2>
@@ -44,120 +44,54 @@
                                 <h3 class="ui teal header">博客</h3>
                             </div>
                             <div class="right aligned column">
-                                共 <h3 class="ui orange header m-inline-block">14</h3> 篇
+                                共 <h3 class="ui orange header m-inline-block" th:text="${page.totalElements}">14</h3> 篇
                             </div>
                         </div>
                     </div>
                     <!--中间内容-->
                     <div class="ui attached padded segment">
-                        <div class="ui m-padded-lr-tiny vertical segment">
+                        <div class="ui m-padded-lr-tiny vertical segment" th:each="blog : ${page.content}">
                             <div class="ui grid stackable mobile reversed">
                                 <div class="eleven wide column">
-                                    <h3 class="ui header">标题</h3>
-                                    <p>内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容</p>
+                                    <h3 class="ui header"><a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="m-black" th:text="${blog.title}">标题</a></h3>
+                                    <p th:text="|${blog.description}....|">内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容</p>
                                     <div class="ui grid">
                                         <div class="eleven wide column">
                                             <div class="ui mini horizontal link list">
                                                 <div class="item">
-                                                    <img src="https://img.temp.im/100x100/09f/fff" alt="" class="ui avatar image">
-                                                    <div class="content"><a href="#" class="header">lilei</a></div>
+                                                    <img src="https://img.temp.im/100x100/09f/fff" th:src="@{${blog.user.avatar}}" alt="" class="ui avatar image">
+                                                    <div class="content"><a href="#" class="header" th:text="${blog.user.nickname}">lilei</a></div>
                                                 </div>
                                                 <div class="item">
-                                                    <i class="calendar icon"></i> 2022-07-01
+                                                    <i class="calendar icon"></i> <span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}">2022-07-01</span>
                                                 </div>
                                                 <div class="item">
-                                                    <i class="eye icon"></i> 100
+                                                    <i class="eye icon"></i> <span th:text="${blog.views}">100</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="right aligned five wide column">
-                                            <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
+                                        <div class="right aligned five wide column" th:if="${blog.type} != null">
+                                            <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.type} != null ? ${blog.type.name}">认知升级</a>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="five wide column">
-                                    <a href="#" target="_blank">
-                                        <img src="https://img.temp.im/800x400/09f/fff" alt="" class="ui rounded image">
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ui m-padded-lr-tiny vertical segment">
-                            <div class="ui grid stackable mobile reversed">
-                                <div class="eleven wide column">
-                                    <h3 class="ui header">标题</h3>
-                                    <p>内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容</p>
-                                    <div class="ui grid">
-                                        <div class="eleven wide column">
-                                            <div class="ui mini horizontal link list">
-                                                <div class="item">
-                                                    <img src="https://img.temp.im/100x100/09f/fff" alt="" class="ui avatar image">
-                                                    <div class="content"><a href="#" class="header">lilei</a></div>
-                                                </div>
-                                                <div class="item">
-                                                    <i class="calendar icon"></i> 2022-07-01
-                                                </div>
-                                                <div class="item">
-                                                    <i class="eye icon"></i> 100
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="right aligned five wide column">
-                                            <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="five wide column">
-                                    <a href="#" target="_blank">
-                                        <img src="https://img.temp.im/800x400/09f/fff" alt="" class="ui rounded image">
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ui m-padded-lr-tiny vertical segment">
-                            <div class="ui grid stackable mobile reversed">
-                                <div class="eleven wide column">
-                                    <h3 class="ui header">标题</h3>
-                                    <p>内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容</p>
-                                    <div class="ui grid">
-                                        <div class="eleven wide column">
-                                            <div class="ui mini horizontal link list">
-                                                <div class="item">
-                                                    <img src="https://img.temp.im/100x100/09f/fff" alt="" class="ui avatar image">
-                                                    <div class="content"><a href="#" class="header">lilei</a></div>
-                                                </div>
-                                                <div class="item">
-                                                    <i class="calendar icon"></i> 2022-07-01
-                                                </div>
-                                                <div class="item">
-                                                    <i class="eye icon"></i> 100
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="right aligned five wide column">
-                                            <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin">认知升级</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="five wide column">
-                                    <a href="#" target="_blank">
-                                        <img src="https://img.temp.im/800x400/09f/fff" alt="" class="ui rounded image">
+                                    <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank">
+                                        <img src="https://img.temp.im/800x400/09f/fff" th:src="@{${blog.firstPicture}}" alt="" class="ui rounded image">
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!--底部-->
-                    <div class="ui bottom attached segment">
+                    <div class="ui bottom attached segment" th:if="${page.totalPages}>1">
                         <div class="ui middle aligned two column grid">
                             <div class="column">
-                                <a href="#" class="ui teal basic mini button">上一页</a>
+                                <a href="#" th:href="@{/(page=${page.number}-1)}" th:unless="${page.first}" class="ui teal basic mini button">上一页</a>
                             </div>
                             <div class="right aligned column">
-                                <a href="#" class="ui teal basic mini button">下一页</a>
+                                <a href="#" th:href="@{/(page=${page.number}+1)}" th:unless="${page.last}" class="ui teal basic mini button">下一页</a>
                             </div>
                         </div>
                     </div>
@@ -178,12 +112,10 @@
                         </div>
                         <div class="ui teal segment">
                             <div class="ui fluid vertical menu">
-                                <a href="#" class="item">学习日志
-                                <div class="ui teal basic left pointing label">13</div>
+                                <a href="#" class="item" th:each="type : ${types}"><span th:text="${type.name}">学习日志</span>
+                                <div class="ui teal basic left pointing label" th:text="${#arrays.length(type.blogs)}">13</div>
                                 </a>
-                                <a href="#" class="item">学习日志
-                                    <div class="ui teal basic left pointing label">13</div>
-                                </a>
+                                <!--/*-->
                                 <a href="#" class="item">学习日志
                                     <div class="ui teal basic left pointing label">13</div>
                                 </a>
@@ -193,6 +125,10 @@
                                 <a href="#" class="item">学习日志
                                     <div class="ui teal basic left pointing label">13</div>
                                 </a>
+                                <a href="#" class="item">学习日志
+                                    <div class="ui teal basic left pointing label">13</div>
+                                </a>
+                                <!--*/-->
                             </div>
                         </div>
                     </div>
@@ -209,6 +145,10 @@
                             </div>
                         </div>
                         <div class="ui teal segment">
+                            <a href="#" class="ui teal basic left pointing label m-margin-tb-mini" th:each="tag : ${tags}">
+                                <span th:text="${tag.name}">博客标签</span><div class="detail" th:text="${#arrays.length(tag.blogs)}">13</div>
+                            </a>
+                            <!--/*-->
                             <a href="#" class="ui teal basic left pointing label m-margin-tb-mini">
                                 博客标签 <div class="detail">13</div>
                             </a>
@@ -218,9 +158,7 @@
                             <a href="#" class="ui teal basic left pointing label m-margin-tb-mini">
                                 博客标签 <div class="detail">13</div>
                             </a>
-                            <a href="#" class="ui teal basic left pointing label m-margin-tb-mini">
-                                博客标签 <div class="detail">13</div>
-                            </a>
+                            <!--*/-->
                         </div>
                     </div>
                     <!--最新推荐-->
@@ -228,11 +166,8 @@
                         <div class="ui secondary segment">
                             <i class="bookmark icon"></i>最新推荐
                         </div>
-                        <div class="ui segment">
-                            <a href="#" target="_blank" class="m-black m-text-thin">用户故事</a>
-                        </div>
-                        <div class="ui segment">
-                            <a href="#" target="_blank" class="m-black m-text-thin">用户故事</a>
+                        <div class="ui segment" th:each="blog : ${recommendBlogs}" >
+                            <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="m-black m-text-thin" th:text="${blog.title}">用户故事</a>
                         </div>
                     </div>
                     <!--二维码-->

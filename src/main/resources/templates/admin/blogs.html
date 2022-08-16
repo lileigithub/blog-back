@@ -98,7 +98,7 @@
                     <tr th:each="blog,iterStat : ${page.content}">
                         <td th:text="${iterStat.count}">1</td>
                         <td th:text="${blog.title}">标题名称</td>
-                        <td th:text="${blog.type.name}">分类名称</td>
+                        <td th:text="${blog.type} != null ? ${blog.type.name}">分类名称</td>
                         <td th:text="${blog.recommend} ? '是':'否'">是</td>
                         <td th:text="${blog.published} ? '发布':'草稿'">草稿</td>
                         <td th:text="${blog.updateTime}">2022-08-01</td>
