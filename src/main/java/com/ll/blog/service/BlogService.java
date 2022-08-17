@@ -23,4 +23,6 @@ public interface BlogService {
     List<Blog> listRecommentBlogTop(int i);
 
     Page searchLikeTitleContent(String query, Pageable pageable);
+
+    Page listPublishedByTagId(Pageable pageable, Long id);
 }

@@ -18,10 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.thymeleaf.util.StringUtils;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +32,7 @@ public class BlogServiceImpl implements BlogService{
     TagRepository tagRepository;
     @Override
     public Page listPublished(Pageable pageable, BlogQuery blog) {
-        Page<Blog> all = blogRepository.findAll(new Specification<Blog>() {
+        return blogRepository.findAll(new Specification<Blog>() {
             @Override
             public Predicate toPredicate(Root<Blog> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<>();
@@ -52,7 +49,6 @@ public class BlogServiceImpl implements BlogService{
                 return null;
             }
         }, pageable);
-        return all;
     }
 
     @Override
@@ -118,5 +114,16 @@ public class BlogServiceImpl implements BlogService{
     @Override
     public Page searchLikeTitleContent(String query, Pageable pageable) {
         return blogRepository.searchLikeTitleContent(query, pageable);
+    }
+
+    @Override
+    public Page listPublishedByTagId(Pageable pageable, Long id) {
+        return blogRepository.findAll(new Specification<Blog>() {
+            @Override
+            public Predicate toPredicate(Root<Blog> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Join join = root.join("tags");
+                return cb.equal(join.get("id"), id);
+            }
+        }, pageable);
     }
 }
