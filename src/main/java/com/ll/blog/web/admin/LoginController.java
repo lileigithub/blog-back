@@ -40,7 +40,7 @@ public class LoginController {
 
     @GetMapping("/index")
     public String adminIndexPage() {
-        return "/admin/index";
+        return "admin/index";
     }
 
     @GetMapping("/logout")

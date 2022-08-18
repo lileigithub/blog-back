@@ -32,7 +32,7 @@ public class TagController {
     @GetMapping("/tags")
     public String types(@PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable, Model model){
         model.addAttribute("page", tagService.list(pageable));
-        return "/admin/tags";
+        return "admin/tags";
     }
 
     /**

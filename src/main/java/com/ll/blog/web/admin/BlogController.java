@@ -41,13 +41,13 @@ public class BlogController {
         model.addAttribute("page", list);
         List<Type> all = typeService.findAll();
         model.addAttribute("types", all);
-        return "/admin/blogs";
+        return "admin/blogs";
     }
 
     @PostMapping("/blogs/search")
     public String search(@PageableDefault(sort="updateTime", direction = Sort.Direction.DESC) Pageable pageable, BlogQuery blog, Model model){
         model.addAttribute("page", blogService.listPublished(pageable, blog));
-        return "/admin/blogs :: blogList";
+        return "admin/blogs :: blogList";
     }
 
     /**
@@ -61,7 +61,7 @@ public class BlogController {
         model.addAttribute("blog", new Blog());
         model.addAttribute("types", typeService.findAll());
         model.addAttribute("tags", tagService.findAll());
-        return "/admin/blogs-input";
+        return "admin/blogs-input";
     }
 
     @PostMapping("/blogs")
