@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>归档</title>
-    <link rel="stylesheet" href="../static/css/semantic.min.css">
-    <link rel="stylesheet" href="../static/css/me.css">
+    <link rel="stylesheet" href="../static/css/semantic.min.css" th:href="@{/css/semantic.min.css}">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
 </head>
 <body>
 <!--导航-->
-<nav class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
+<nav th:replace="_fragments :: menu(4)" class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
     <div class="ui inverted menu secondary stackable">
         <div class="ui container">
             <h2 class="ui teal header item">Blog</h2>
@@ -40,49 +40,27 @@
                         <h3 class="ui teal header">归档</h3>
                     </div>
                     <div class="right aligned column">
-                        共 <h3 class="ui orange header m-inline-block">14</h3> 个
+                        共 <h3 class="ui orange header m-inline-block" th:text="${count}">14</h3> 个
                     </div>
                 </div>
             </div>
-            <h2 class="ui center aligned header">2022</h2>
-            <div class="ui vertical menu fluid">
-                <a href="#" target="_blank" class="item">
+            <th:block th:each="map : ${archiveBlogs}">
+                <h2 class="ui center aligned header" th:text="${map.key}">2022</h2>
+                <div class="ui vertical menu fluid">
+                    <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="item" th:each="blog : ${map.value}">
                     <span>
-                        <i class="mini teal circle icon" style="margin-right: 0.5rem"></i>博客文章1
-                        <div class="ui teal basic left pointing label m-margin-tb-mini m-padded-tiny">2022-8</div>
+                        <i class="mini teal circle icon" style="margin-right: 0.5rem"></i><span th:text="${blog.title}">博客文章1</span>
+                        <div class="ui teal basic left pointing label m-margin-tb-mini m-padded-tiny" th:text="${#dates.format(blog.updateTime,'MMM')}">2022-8</div>
                     </span>
-                    <div class="ui orange basic left pointing label m-margin-tb-mini m-padded-tiny">原创</div>
-                </a>
-                <a href="#" target="_blank" class="item">
-                    <span>
-                        <i class="mini teal circle icon" style="margin-right: 0.5rem"></i>博客文章2
-                        <div class="ui teal basic left pointing label m-margin-tb-mini m-padded-tiny">2022-8</div>
-                    </span>
-                    <div class="ui orange basic left pointing label m-margin-tb-mini m-padded-tiny">原创</div>
-                </a>
-            </div>
-            <h2 class="ui center aligned header">2021</h2>
-            <div class="ui vertical menu fluid">
-                <a href="#" target="_blank" class="item">
-                    <span>
-                        <i class="mini teal circle icon" style="margin-right: 0.5rem"></i>博客文章3
-                        <div class="ui teal basic left pointing label m-margin-tb-mini m-padded-tiny">2022-8</div>
-                    </span>
-                    <div class="ui orange basic left pointing label m-margin-tb-mini m-padded-tiny">原创</div>
-                </a>
-                <a href="#" target="_blank" class="item">
-                    <span>
-                        <i class="mini teal circle icon" style="margin-right: 0.5rem"></i>博客文章4
-                        <div class="ui teal basic left pointing label m-margin-tb-mini m-padded-tiny">2022-8</div>
-                    </span>
-                    <div class="ui orange basic left pointing label m-margin-tb-mini m-padded-tiny">原创</div>
-                </a>
-            </div>
+                        <div class="ui orange basic left pointing label m-margin-tb-mini m-padded-tiny" th:text="${blog.flag}">原创</div>
+                    </a>
+                </div>
+            </th:block>
         </div>
     </div>
 </div>
 <!--底部-->
-<footer class="ui inverted vertical segment m-padded-tb-massive">
+<footer th:replace="_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
     <div class="ui container center aligned">
         <div class="ui grid divided inverted stackable">
             <div class="three wide column">
@@ -119,12 +97,6 @@
     </div>
 
 </footer>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="../static/js/semantic.min.js"></script>
-<script>
-    $('.menu.toggle').click(function (){
-        $('.m-item').toggleClass("m-mobile-hide");
-    })
-</script>
+<th:block th:replace="_fragments :: script"></th:block>
 </body>
 </html>

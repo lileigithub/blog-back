@@ -94,7 +94,7 @@
     </div>
 </div>
 <!--底部-->
-<footer class="ui inverted vertical segment m-padded-tb-massive">
+<footer th:replace="_fragment :: footer" class="ui inverted vertical segment m-padded-tb-massive">
     <div class="ui container center aligned">
         <div class="ui grid divided inverted stackable">
             <div class="three wide column">
@@ -131,12 +131,6 @@
     </div>
 
 </footer>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="../static/js/semantic.min.js" th:href="@{/js/semantic.min.js}"></script>
-<script>
-    $('.menu.toggle').click(function (){
-        $('.m-item').toggleClass("m-mobile-hide");
-    })
-</script>
+<th:block th:replace="_fragments :: script"></th:block>
 </body>
 </html>

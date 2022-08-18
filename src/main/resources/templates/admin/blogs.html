@@ -51,7 +51,7 @@
     <div class="m-padded-tb-large">
         <div class="ui container">
             <div class="ui form segment">
-                <input type="hidden" nama="page">
+                <input type="hidden" name="page">
                 <div class="fields inline">
                     <div class="field">
                         <input type="text" name="title" placeholder="标题">
@@ -112,8 +112,8 @@
                     <tr>
                         <th colspan="7">
                             <div class="ui pagination menu mini" th:if="${page.totalPages}>1">
-                                <a onclick="page(this)" data-page="${page.number}-1" class="icon item" th:unless="${page.first}">上一页</a>
-                                <a onclick="page(this)" data-page="${page.number}+1" class="item" th:unless="${page.last}">下一页</a>
+                                <a onclick="page(this)" th:attr="data-page=${page.number}-1" class="icon item" th:unless="${page.first}">上一页</a>
+                                <a onclick="page(this)" th:attr="data-page=${page.number}+1" class="item" th:unless="${page.last}">下一页</a>
                             </div>
                             <a href="#" th:href="@{/admin/blogs/input}" class="ui right floated mini teal basic button">新增</a>
                         </th>
@@ -173,10 +173,8 @@
 <script>
     $('.menu.toggle').click(function (){
         $('.m-item').toggleClass("m-mobile-hide");
-    })
-    $('.ui.dropdown')
-        .dropdown()
-    ;
+    });
+    $('.ui.dropdown').dropdown();
 
     function page(obj) {
         $("[name='page']").val($(obj).data("page"));

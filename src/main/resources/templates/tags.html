@@ -40,7 +40,7 @@
                             <h3 class="ui teal header">标签</h3>
                         </div>
                         <div class="right aligned column">
-                            共 <h3 class="ui orange header m-inline-block" th:text="${page.totalElements}">14</h3> 个
+                            共 <h3 class="ui orange header m-inline-block" th:text="${#arrays.length(tags)}">14</h3> 个
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                                     <div class="row">
                                         <div class="column">
                                             <a href="#" class="ui teal basic left pointing label m-padded-tiny" th:each="tag : ${blog.tags}">
-                                                <span th:text="${tag.name}">博客标签</span> <div class="detail" th:text="${#arrays.length(tag.blogs)}">13</div>
+                                                <span th:text="${tag.name}">博客标签</span>
                                             </a>
                                         </div>
                                     </div>
@@ -144,12 +144,7 @@
     </div>
 
 </footer>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="../static/js/semantic.min.js" th:src="@{/js/semantic.min.js}"></script>
-<script>
-    $('.menu.toggle').click(function (){
-        $('.m-item').toggleClass("m-mobile-hide");
-    })
-</script>
+<th:block th:replace="_fragments :: script"></th:block>
+
 </body>
 </html>

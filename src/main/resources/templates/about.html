@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>关于我</title>
-    <link rel="stylesheet" href="../static/css/semantic.min.css">
-    <link rel="stylesheet" href="../static/css/me.css">
+    <link rel="stylesheet" href="../static/css/semantic.min.css" th:href="@{/css/semantic.min.css}">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
 </head>
 <body>
 <!--导航-->
-<nav class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
+<nav th:replace="_fragments :: menu(5)" class="ui inverted segment attached m-padded-tb-mini m-shadow-small">
     <div class="ui inverted menu secondary stackable">
         <div class="ui container">
             <h2 class="ui teal header item">Blog</h2>
@@ -37,8 +37,7 @@
             <div class="ui grid stackable">
                 <!--左边博客列表-->
                 <div class="eleven wide column">
-                    <img src="https://img.temp.im/800x600/09f/fff" class="ui image rounded" alt="">
-
+                    <img src="https://img.temp.im/800x600/09f/fff" th:src="@{/images/about-img.jpg}" class="ui image rounded"  style="width:800px" alt="">
                 </div>
                 <!--右边top-->
                 <div class="five wide column">
@@ -46,37 +45,37 @@
                         <div class="ui header">关于我</div>
                     </div>
                     <div class="ui attached segment">
-                        <p>介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍</p>
+                        <p>这个人很神秘...</p>
                     </div>
                     <div class="ui attached segment">
                         <div class="ui orange basic left pointing label m-margin-tb-mini">
-                            个人标签
+                            活着
                         </div>
                         <div class="ui orange basic left pointing label m-margin-tb-mini">
-                            个人标签
+                            躺平
                         </div>
                         <div class="ui orange basic left pointing label m-margin-tb-mini">
-                            个人标签
+                            搞钱
                         </div>
                     </div>
                     <div class="ui attached segment">
                         <div class="ui teal basic left pointing label m-margin-tb-mini">
-                            技术标签
+                            java
                         </div>
                         <div class="ui teal basic left pointing label m-margin-tb-mini">
-                            技术标签
+                            HTML
                         </div>
                         <div class="ui teal basic left pointing label m-margin-tb-mini">
-                            技术标签
+                            MySql
                         </div>
                     </div>
                     <div class="ui bottom attached segment">
-                        <a href="#" class="ui circular button icon"><i class="github black icon"></i></a>
+                        <a href="https://github.com/lileigithub/blog-back" target="_blank" class="ui circular button icon"><i class="github black icon"></i></a>
                         <a href="#" class="ui wechat-button circular button icon"><i class="wechat green icon"></i></a>
                         <div class="ui qq circular button icon" data-content="QQ:751475472" data-position="bottom center"><i class="qq blue icon"></i></div>
                     </div>
                     <div class="ui wechat-qr flowing popup transition hidden">
-                        <img src="../static/images/qrcode_www.bilibili.com.png" alt="" class="ui bordered rounded image" style="width: 120px">
+                        <img src="https://img.temp.im/800x600/09f/fff" th:src="@{/images/my-wechat-qrcode.jpg}" alt="" class="ui bordered rounded image" style="width: 120px">
                     </div>
                 </div>
             </div>
@@ -84,7 +83,7 @@
     </div>
 </div>
 <!--底部-->
-<footer class="ui inverted vertical segment m-padded-tb-massive">
+<footer th:replace="_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
     <div class="ui container center aligned">
         <div class="ui grid divided inverted stackable">
             <div class="three wide column">
@@ -121,17 +120,17 @@
     </div>
 
 </footer>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="../static/js/semantic.min.js"></script>
+
+<th:block th:replace="_fragments :: script"></th:block>
 <script>
-    $('.menu.toggle').click(function (){
-        $('.m-item').toggleClass("m-mobile-hide");
-    })
-    $('.qq').popup();
+    $('.qq').popup({
+        hoverable : true
+    });
     $('.wechat-button').popup({
         popup : $(".wechat-qr.popup"),
         on : 'hover',
-        position: 'bottom center'
+        position: 'bottom center',
+        hoverable : true
     })
 </script>
 </body>

@@ -1,3 +1,5 @@
+server:
+  port: 8081
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -8,6 +10,8 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  messages:
+    basename: i18n/messages
 
 logging:
   level:
@@ -15,5 +19,3 @@ logging:
     com.ll: debug
   file:
     name: log/blog.log
-server:
-  port: 8081

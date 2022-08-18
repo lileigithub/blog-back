@@ -1,5 +1,6 @@
 package com.ll.blog.web;
 
+import com.ll.blog.entity.Blog;
 import com.ll.blog.entity.Tag;
 import com.ll.blog.entity.Type;
 import com.ll.blog.service.BlogService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * description
@@ -58,5 +60,24 @@ public class FrontShowController {
         model.addAttribute("tags", tags);
         model.addAttribute("activeTagId", id);
         return "/tags";
+    }
+
+    @GetMapping("/archives")
+    public String archives(Model model){
+        Map<String, List<Blog>> archiveBlogs = blogService.archives();
+        model.addAttribute("archiveBlogs", archiveBlogs);
+        model.addAttribute("count", blogService.count(true));
+        return "/archives";
+    }
+
+    @GetMapping("about")
+    public String about(){
+        return "/about";
+    }
+
+    @GetMapping("/footer/newBlog")
+    public String newBlogList(Model model){
+        model.addAttribute("newBlogs", blogService.listRecommentBlogTop(3));
+        return "_fragments :: newBlogList";
     }
 }

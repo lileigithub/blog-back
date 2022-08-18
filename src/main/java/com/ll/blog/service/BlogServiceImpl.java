@@ -19,9 +19,7 @@ import org.springframework.util.CollectionUtils;
 import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -125,5 +123,33 @@ public class BlogServiceImpl implements BlogService{
                 return cb.equal(join.get("id"), id);
             }
         }, pageable);
+    }
+
+    @Override
+    public Map<String, List<Blog>> archives() {
+        List<String> years = blogRepository.archivesYears();
+        Map<String, List<Blog>> map = new LinkedHashMap<>();
+        if(!CollectionUtils.isEmpty(years)){
+            for (String year : years) {
+                List<Blog> blogs = blogRepository.selectByYear(year);
+                map.put(year, blogs);
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public Long count(Boolean published) {
+        return blogRepository.count(new Specification<Blog>() {
+            @Override
+            public Predicate toPredicate(Root<Blog> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<>();
+                if (published != null) {
+                    predicates.add(cb.equal(root.<Boolean>get("published"), published));
+                }
+                query.where(predicates.toArray(new Predicate[predicates.size()]));
+                return null;
+            }
+        });
     }
 }

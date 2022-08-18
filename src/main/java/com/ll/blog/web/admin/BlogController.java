@@ -57,6 +57,7 @@ public class BlogController {
      */
     @GetMapping("/blogs/input")
     public String input(Model model){
+        //TODO 编辑时的flag保存问题
         model.addAttribute("blog", new Blog());
         model.addAttribute("types", typeService.findAll());
         model.addAttribute("tags", tagService.findAll());
