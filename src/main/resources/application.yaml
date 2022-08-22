@@ -12,6 +12,8 @@ spring:
     show-sql: true
   messages:
     basename: i18n/messages
+  redis:
+    host: 127.0.0.1
 
 logging:
   level:

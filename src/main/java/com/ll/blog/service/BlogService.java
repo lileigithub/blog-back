@@ -30,4 +30,6 @@ public interface BlogService {
     Map<String, List<Blog>> archives();
 
     Long count(Boolean published);
+
+    void saveViewsById(Long id, Integer views);
 }

@@ -152,4 +152,9 @@ public class BlogServiceImpl implements BlogService{
             }
         });
     }
+
+    @Override
+    public void saveViewsById(Long id, Integer views) {
+        blogRepository.saveViewsById(id, views);
+    }
 }
