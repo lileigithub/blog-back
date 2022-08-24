@@ -32,4 +32,8 @@ public interface BlogService {
     Long count(Boolean published);
 
     void saveViewsById(Long id, Integer views);
+
+    void blogLike(Long id, String ipAddress);
+
+    void saveLikesCache(Long id, Integer flag, String ipAddress);
 }

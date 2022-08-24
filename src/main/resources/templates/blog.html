@@ -70,8 +70,27 @@
                     <div class="ui basic teal left pointing label" th:text="${blog.type} != null ? ${blog.type.name}">方法论</div>
                 </div>
                 <!--赞赏-->
-                <div class="ui basic segment center aligned" th:if="${blog.appreciation}">
-                    <button id="payButton" class="ui orange basic button circular">赞赏</button>
+                <div class="ui two column centered grid ">
+                    <div class="ui horizontal link list">
+                        <div class="item">
+                            <div id="like-btn" class="medium ui labeled button circular" tabindex="0">
+                                <div class="m-like medium ui button circular">
+                                    <i class="heart icon"></i> Like
+                                </div>
+                                <a class="m-like medium ui basic left pointing label circular">
+                                    <span th:text="${blog.likes}">112</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="item" th:if="${blog.appreciation}">
+                            <div>
+                                <button id="payButton" class="ui orange basic button circular">赞赏</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+
                 </div>
                 <div class="ui payQ flowing popup transition hidden">
                     <div class="ui basic label">
@@ -268,6 +287,17 @@
 
 </footer>
 <th:block th:replace="_fragments :: script"></th:block>
+<!--/*-->
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="../static/js/semantic.min.js" th:src="@{/js/semantic.min.js}"></script>
+<script>
+    $('.menu.toggle').click(function (){
+        $('.m-item').toggleClass("m-mobile-hide");
+    });
+
+    $('#newBlogs-container').load(/*[[@{/footer/newBlog}]]*/"/footer/newBlog");
+</script>
+<!--*/-->
 <script src="../static/lib/prism/prism.js" th:src="@{/lib/prism/prism.js}"></script>
 <script src="../static/lib/tocbot/tocbot.min.js" th:src="@{/lib/tocbot/tocbot.min.js}"></script>
 <script src="../static/lib/qrcode/qrcode.min.js" th:src="@{/lib/qrcode/qrcode.min.js}"></script>
@@ -327,6 +357,37 @@
             console.log('Scrolled to waypoint!' + direction)
         }
     })
+
+
+    /*[[@{/blog/{id}(id=${blog.id})}]]*/"";
+    var likeUrl = /*[[@{/blog/like/{id}/(id=${blog.id})}]]*/"";
+    $('.m-like').click(function (){
+        var node = document.getElementsByClassName("m-like");
+        var flag;
+        if(node.item(0).classList.contains('red')){
+            flag = "0";
+        }else {
+            flag = "1";
+        }
+        $.ajax({
+            type: "GET",
+            url: likeUrl+flag,
+            data: {},
+            dataType: "text",
+            success: function(result) {}
+        });
+
+        $('.m-like').toggleClass("red");
+    });
+
+    /*$("#search-btn").click(function () {
+        $("#table-container").load(/!*[[@{/admin/blogs/search}]]*!/"/admin/blogs/search",{
+            title : $("[name='title']").val(),
+            typeId : $("[name='typeId']").val(),
+            recommend : $("[name='recommend']").prop('checked'),
+            page : $("[name='page']").val()
+        });
+    });*/
 
 </script>
 </body>

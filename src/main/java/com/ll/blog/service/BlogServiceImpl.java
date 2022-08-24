@@ -1,18 +1,27 @@
 package com.ll.blog.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.blog.dao.BlogRepository;
 import com.ll.blog.dao.TagRepository;
+import com.ll.blog.dto.BlogCacheDto;
 import com.ll.blog.entity.Blog;
 import com.ll.blog.entity.Tag;
 import com.ll.blog.entity.Type;
+import com.ll.blog.exception.NotFoundException;
+import com.ll.blog.util.Constants;
 import com.ll.blog.util.MarkdownUtils;
 import com.ll.blog.vo.BlogQuery;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.HyperLogLogOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -28,6 +37,8 @@ public class BlogServiceImpl implements BlogService{
     BlogRepository blogRepository;
     @Autowired
     TagRepository tagRepository;
+    @Autowired
+    RedisTemplate redisTemplate;
     @Override
     public Page listPublished(Pageable pageable, BlogQuery blog) {
         return blogRepository.findAll(new Specification<Blog>() {
@@ -62,8 +73,12 @@ public class BlogServiceImpl implements BlogService{
             blog.setUpdateTime(new Date());
             blog.setViews(0);
         }else{
+            Blog exitsBlog = blogRepository.findById(blog.getId()).orElse(null);
+            if(exitsBlog == null) throw new NotFoundException("更新的博客不存在");
             //TODO 更新有问题，需要改 参考P36
             blog.setUpdateTime(new Date());
+            BeanUtils.copyProperties(blog, exitsBlog);
+            blog = exitsBlog;
         }
         return blogRepository.save(blog);
     }
@@ -156,5 +171,41 @@ public class BlogServiceImpl implements BlogService{
     @Override
     public void saveViewsById(Long id, Integer views) {
         blogRepository.saveViewsById(id, views);
+    }
+
+    @Override
+    public void blogLike(Long id, String ipAddress) {
+        if(blogRepository.existsById(id)){
+            /*HyperLogLogOperations<String, String> logLogOperations = stringRedisTemplate.opsForHyperLogLog();
+            logLogOperations.add(Constants.BLOG_LIKES_KEY+id, ipAddress);*/
+        }
+    }
+
+    /**
+     * 计数+1 用户喜欢set add
+     * @param id
+     * @param flag
+     * @param ipAddress
+     */
+    @Override
+    public void saveLikesCache(Long id, Integer flag, String ipAddress) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Object getObject = redisTemplate.opsForValue().get(Constants.BLOG_CACHE_KEY + id);
+        BlogCacheDto blogCacheDto = objectMapper.convertValue(getObject, new TypeReference<BlogCacheDto>() {
+        });
+        Integer likes = 0;
+        if(flag == 1){//喜欢
+            //计数
+            likes = blogCacheDto.getLikes() == null ? 1 : (blogCacheDto.getLikes() +1);
+            //存set
+            redisTemplate.opsForSet().add(Constants.USER_BLOG_LIKES_SET+ipAddress, id);
+        }else{
+            //不喜欢
+            likes = (blogCacheDto.getLikes() == null || blogCacheDto.getLikes() == 0) ? 0 : (blogCacheDto.getLikes() -1);
+            redisTemplate.opsForSet().remove(Constants.USER_BLOG_LIKES_SET+ipAddress, id);
+        }
+        blogCacheDto.setLikes(likes);
+        redisTemplate.opsForValue().set(Constants.BLOG_CACHE_KEY + id, blogCacheDto);
+
     }
 }

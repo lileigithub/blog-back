@@ -44,7 +44,7 @@ public class LogAspect {
     }
 
     @AfterReturning(returning = "result", pointcut = "log()")
-    public void doAfterReturn(Object result){
+    public void doAfterReturn(Object result) throws Exception{
         logger.info("result: {}", result);
     }
 

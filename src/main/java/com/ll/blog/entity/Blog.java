@@ -40,6 +40,11 @@ public class Blog {
      */
     private Integer views;
     /**
+     * 点赞数
+     * //TODO 还没有多租户登录，所以先只计数，以后再加关联表
+     */
+    private Integer likes;
+    /**
      * 描述
      */
     private String description;

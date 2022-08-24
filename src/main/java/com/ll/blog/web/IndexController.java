@@ -1,13 +1,15 @@
 package com.ll.blog.web;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ll.blog.dto.BlogViewDto;
+import com.ll.blog.dto.BlogCacheDto;
 import com.ll.blog.entity.Blog;
 import com.ll.blog.entity.Tag;
 import com.ll.blog.entity.Type;
 import com.ll.blog.service.BlogService;
 import com.ll.blog.service.TagService;
 import com.ll.blog.service.TypeService;
+import com.ll.blog.util.Constants;
 import com.ll.blog.util.IpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,8 +40,8 @@ public class IndexController {
     @Autowired
     RedisTemplate redisTemplate;
 
-    @GetMapping({"/","index"})
-    public String index(@PageableDefault(sort="updateTime", direction = Sort.Direction.DESC) Pageable pageable, Model model){
+    @GetMapping({"/", "index"})
+    public String index(@PageableDefault(sort = "updateTime", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
         Page page = blogService.listPublished(pageable);
         List<Type> types = typeService.findTopByBlogSize(6);
         List<Tag> tags = tagService.findTopByBlogSize(6);
@@ -52,7 +54,7 @@ public class IndexController {
     }
 
     @PostMapping("search")
-    public String search(@RequestParam String query, @PageableDefault(sort="updateTime", direction = Sort.Direction.DESC) Pageable pageable, Model model){
+    public String search(@RequestParam String query, @PageableDefault(sort = "updateTime", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
         Page page = blogService.searchLikeTitleContent(query, pageable);
         model.addAttribute("page", page);
         model.addAttribute("query", query);
@@ -60,33 +62,54 @@ public class IndexController {
     }
 
     @GetMapping("blog/{id}")
-    public String blog(@PathVariable Long id, Model model, HttpServletRequest request) throws Exception{
-        if(id == null) return "redirect:/";
+    public String blog(@PathVariable Long id, Model model, HttpServletRequest request) throws Exception {
+        if (id == null) return "redirect:/";
         Blog blog = blogService.getAndConvert(id);
-        model.addAttribute("blog",blog);
-        if(blog == null) return "redirect:/";
-        String ipAddress = IpUtils.getIPAddress(request);
-        if(redisTemplate.opsForValue().get("blogWait_"+ipAddress) == null){//这个ip查看文章，计阅读量2分钟cd
-            redisTemplate.opsForValue().set("blogWait_"+ipAddress, 1, 120, TimeUnit.SECONDS);
-            String key = "blogViews_"+ id;
-            ObjectMapper objectMapper = new ObjectMapper();
-            if(redisTemplate.opsForValue().get(key) == null){
-                int views = blog.getViews() + 1;
-                BlogViewDto blogViewDto = new BlogViewDto(views, views);
-                redisTemplate.opsForValue().set(key, objectMapper.writeValueAsString(blogViewDto));
-            }else {
-                Object result = redisTemplate.opsForValue().get(key);
-                BlogViewDto blogViewDto = objectMapper.convertValue(result, BlogViewDto.class);
+        if (blog == null) return "redirect:/";
 
-            }
+        ObjectMapper objectMapper = new ObjectMapper();
+        String ipAddress = IpUtils.getIPAddress(request);
+        String key = Constants.BLOG_CACHE_KEY + id;
+        Object object = redisTemplate.opsForValue().get(key);
+        BlogCacheDto blogCacheDto;
+        if (object == null) {
+            blogCacheDto = new BlogCacheDto();
+            blogCacheDto.setViews(blog.getViews());
+            blogCacheDto.setLikes(blog.getLikes());
+        } else {
+            blogCacheDto = objectMapper.convertValue(object, new TypeReference<BlogCacheDto>() {
+            });
+        }
+        if (redisTemplate.opsForValue().get("blogWait_" + ipAddress) == null) {//这个ip查看文章,有计数cd
+            redisTemplate.opsForValue().set("blogWait_" + ipAddress, 1, 90, TimeUnit.SECONDS);
+            blogCacheDto.setViews(blogCacheDto.getViews() + 1);
+            blogCacheDto.setChanged(true);
         }
 
+        if(blogCacheDto.getLikes() != 0){
+            blog.setLikes(blogCacheDto.getLikes());
+        }
+        redisTemplate.opsForValue().set(key, blogCacheDto);
+        model.addAttribute("blog", blog);
         return "blog";
     }
 
-    @GetMapping("blog/like/{id}")
-    public String blogLike(){
-        return null;
+    /**
+     * like的存在性校验和计数
+     * 存在性校验需要支持删除，但是布隆过滤器不可以删除，增强型可以，布谷鸟过滤器也可以。
+     * 先用set实现简单的存在性校验，应对小型项目足够了。给每个用户维护一个Set,未登录的一个ip算一个用户。
+     * 不直接更新数据库，先放redis,然后定时更新库。
+     * @param id
+     * @param request
+     * @return
+     */
+    @GetMapping("blog/like/{id}/{flag}")
+    public String blogLike(@PathVariable Long id, @PathVariable Integer flag, HttpServletRequest request) {
+        if (flag != null) {
+            String ipAddress = IpUtils.getIPAddress(request);
+            blogService.saveLikesCache(id, flag, ipAddress);
+        }
+        return "forward:/blog/" + id;
     }
 
 
