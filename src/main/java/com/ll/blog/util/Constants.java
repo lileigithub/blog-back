@@ -7,6 +7,6 @@ package com.ll.blog.util;
  */
 public class Constants {
     private Constants() {throw new IllegalStateException("dont construct");}
-    public final static String BLOG_CACHE_KEY = "blogCache_";
-    public final static String USER_BLOG_LIKES_SET = "userlikes_";
+    public final static String BLOG_CACHE_KEY = "blogCache:id_";
+    public final static String USER_BLOG_LIKES_SET = "userLikes:ip_";
 }

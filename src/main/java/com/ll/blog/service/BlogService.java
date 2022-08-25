@@ -1,5 +1,6 @@
 package com.ll.blog.service;
 
+import com.ll.blog.dto.BlogCacheDto;
 import com.ll.blog.entity.Blog;
 import com.ll.blog.vo.BlogQuery;
 import org.springframework.data.domain.Page;
@@ -31,9 +32,9 @@ public interface BlogService {
 
     Long count(Boolean published);
 
-    void saveViewsById(Long id, Integer views);
-
     void blogLike(Long id, String ipAddress);
 
-    void saveLikesCache(Long id, Integer flag, String ipAddress);
+    Blog saveLikesCache(Long id, Integer flag, String ipAddress);
+
+    void saveBlogCache(Long id, BlogCacheDto blogCacheDto);
 }

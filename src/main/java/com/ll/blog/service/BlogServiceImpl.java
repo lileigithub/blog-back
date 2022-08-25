@@ -169,11 +169,6 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public void saveViewsById(Long id, Integer views) {
-        blogRepository.saveViewsById(id, views);
-    }
-
-    @Override
     public void blogLike(Long id, String ipAddress) {
         if(blogRepository.existsById(id)){
             /*HyperLogLogOperations<String, String> logLogOperations = stringRedisTemplate.opsForHyperLogLog();
@@ -188,24 +183,40 @@ public class BlogServiceImpl implements BlogService{
      * @param ipAddress
      */
     @Override
-    public void saveLikesCache(Long id, Integer flag, String ipAddress) {
+    public Blog saveLikesCache(Long id, Integer flag, String ipAddress) {
         ObjectMapper objectMapper = new ObjectMapper();
         Object getObject = redisTemplate.opsForValue().get(Constants.BLOG_CACHE_KEY + id);
         BlogCacheDto blogCacheDto = objectMapper.convertValue(getObject, new TypeReference<BlogCacheDto>() {
         });
         Integer likes = 0;
         if(flag == 1){//喜欢
-            //计数
-            likes = blogCacheDto.getLikes() == null ? 1 : (blogCacheDto.getLikes() +1);
             //存set
-            redisTemplate.opsForSet().add(Constants.USER_BLOG_LIKES_SET+ipAddress, id);
-        }else{
-            //不喜欢
-            likes = (blogCacheDto.getLikes() == null || blogCacheDto.getLikes() == 0) ? 0 : (blogCacheDto.getLikes() -1);
-            redisTemplate.opsForSet().remove(Constants.USER_BLOG_LIKES_SET+ipAddress, id);
+            Long add = redisTemplate.opsForSet().add(Constants.USER_BLOG_LIKES_SET + ipAddress, id);
+            if(add != 0)
+            {
+                //计数
+                likes = blogCacheDto.getLikes() == null ? 1 : (blogCacheDto.getLikes() +1);
+                blogCacheDto.setLikes(likes);
+                blogCacheDto.setChanged(true);
+            }
+        } else if(flag == 0){
+            //取消喜欢
+            Long remove = redisTemplate.opsForSet().remove(Constants.USER_BLOG_LIKES_SET + ipAddress, id);
+            if(remove != 0){
+                likes = (blogCacheDto.getLikes() == null || blogCacheDto.getLikes() == 0) ? 0 : (blogCacheDto.getLikes() -1);
+                blogCacheDto.setLikes(likes);
+                blogCacheDto.setChanged(true);
+            }
         }
-        blogCacheDto.setLikes(likes);
+        
         redisTemplate.opsForValue().set(Constants.BLOG_CACHE_KEY + id, blogCacheDto);
+        Blog blog = new Blog();
+        blog.setLikes(blogCacheDto.getLikes());
+        return blog;
+    }
 
+    @Override
+    public void saveBlogCache(Long id, BlogCacheDto blogCacheDto) {
+        blogRepository.saveBlogCache(id, blogCacheDto);
     }
 }

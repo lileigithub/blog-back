@@ -38,12 +38,14 @@ public class Blog {
     /**
      * 浏览次数
      */
-    private Integer views;
+    @Column(columnDefinition = "integer default 0")
+    private Integer views = 0;
     /**
      * 点赞数
      * //TODO 还没有多租户登录，所以先只计数，以后再加关联表
      */
-    private Integer likes;
+    @Column(columnDefinition = "integer default 0")
+    private Integer likes = 0;
     /**
      * 描述
      */

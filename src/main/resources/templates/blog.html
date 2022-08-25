@@ -73,11 +73,11 @@
                 <div class="ui two column centered grid ">
                     <div class="ui horizontal link list">
                         <div class="item">
-                            <div id="like-btn" class="medium ui labeled button circular" tabindex="0">
-                                <div class="m-like medium ui button circular">
+                            <div id="like-btn" class="medium ui labeled button circular" tabindex="0" th:fragment="likeDiv">
+                                <div class="m-like medium ui button circular" th:classappend="${isLiked}? 'red'">
                                     <i class="heart icon"></i> Like
                                 </div>
-                                <a class="m-like medium ui basic left pointing label circular">
+                                <a class="m-like medium ui basic left pointing label circular" th:classappend="${isLiked}? 'red'">
                                     <span th:text="${blog.likes}">112</span>
                                 </a>
                             </div>
@@ -96,11 +96,11 @@
                     <div class="ui basic label">
                         <div class="ui images" style="font-size: inherit">
                             <div class="image">
-                                <img src="../static/images/qrcode_www.bilibili.com.png" th:src="@{/qrcode_www.bilibili.com.png}" alt="" class="ui bordered rounded image" style="width: 120px">
+                                <img src="../static/images/qrcode_www.bilibili.com.png" th:src="@{/images/qrcode_www.bilibili.com.png}" alt="" class="ui bordered rounded image" style="width: 120px">
                                 <div>支付宝</div>
                             </div>
                             <div class="image">
-                                <img src="../static/images/qrcode_www.bilibili.com.png" th:src="@{/qrcode_www.bilibili.com.png}" alt="" class="ui bordered rounded image" style="width: 120px">
+                                <img src="../static/images/qrcode_www.bilibili.com.png" th:src="@{/images/qrcode_www.bilibili.com.png}" alt="" class="ui bordered rounded image" style="width: 120px">
                                 <div>微信</div>
                             </div>
                         </div>
@@ -356,12 +356,10 @@
             }
             console.log('Scrolled to waypoint!' + direction)
         }
-    })
+    });
 
-
-    /*[[@{/blog/{id}(id=${blog.id})}]]*/"";
     var likeUrl = /*[[@{/blog/like/{id}/(id=${blog.id})}]]*/"";
-    $('.m-like').click(function (){
+    $(document).on('click',".m-like",function () {//thymleaf的动态更新会让jQuery的函数绑定失效，所以换这种方式绑定
         var node = document.getElementsByClassName("m-like");
         var flag;
         if(node.item(0).classList.contains('red')){
@@ -369,25 +367,17 @@
         }else {
             flag = "1";
         }
-        $.ajax({
+        /*$.ajax({
             type: "GET",
             url: likeUrl+flag,
             data: {},
             dataType: "text",
-            success: function(result) {}
-        });
-
-        $('.m-like').toggleClass("red");
+            success: function(result) {
+                $("#like-btn").html(result);
+            }
+        });*/
+        $("#like-btn").load(likeUrl+flag);
     });
-
-    /*$("#search-btn").click(function () {
-        $("#table-container").load(/!*[[@{/admin/blogs/search}]]*!/"/admin/blogs/search",{
-            title : $("[name='title']").val(),
-            typeId : $("[name='typeId']").val(),
-            recommend : $("[name='recommend']").prop('checked'),
-            page : $("[name='page']").val()
-        });
-    });*/
 
 </script>
 </body>

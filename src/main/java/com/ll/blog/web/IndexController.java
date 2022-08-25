@@ -74,8 +74,9 @@ public class IndexController {
         BlogCacheDto blogCacheDto;
         if (object == null) {
             blogCacheDto = new BlogCacheDto();
-            blogCacheDto.setViews(blog.getViews());
-            blogCacheDto.setLikes(blog.getLikes());
+            blogCacheDto.setViews(blog.getViews() == null ? 0 : blog.getViews());
+            blogCacheDto.setLikes(blog.getLikes() == null ? 0 : blog.getLikes());
+            blogCacheDto.setChanged(false);
         } else {
             blogCacheDto = objectMapper.convertValue(object, new TypeReference<BlogCacheDto>() {
             });
@@ -86,11 +87,11 @@ public class IndexController {
             blogCacheDto.setChanged(true);
         }
 
-        if(blogCacheDto.getLikes() != 0){
-            blog.setLikes(blogCacheDto.getLikes());
-        }
+        blog.setLikes(blogCacheDto.getLikes());
         redisTemplate.opsForValue().set(key, blogCacheDto);
+        Boolean iMember = redisTemplate.opsForSet().isMember(Constants.USER_BLOG_LIKES_SET + ipAddress, id);
         model.addAttribute("blog", blog);
+        model.addAttribute("isLiked", iMember);
         return "blog";
     }
 
@@ -99,17 +100,23 @@ public class IndexController {
      * 存在性校验需要支持删除，但是布隆过滤器不可以删除，增强型可以，布谷鸟过滤器也可以。
      * 先用set实现简单的存在性校验，应对小型项目足够了。给每个用户维护一个Set,未登录的一个ip算一个用户。
      * 不直接更新数据库，先放redis,然后定时更新库。
+     * TODO bug:存在性检查和计数可能会不一致，原因有：网络、服务器故障、mysql和redis不能保持同一事务，出错后不能一起回退等。
+     * TODO 维护喜欢的博客与用户关联的MySQL储存。
      * @param id
      * @param request
      * @return
      */
     @GetMapping("blog/like/{id}/{flag}")
-    public String blogLike(@PathVariable Long id, @PathVariable Integer flag, HttpServletRequest request) {
+    public String blogLike(@PathVariable Long id, @PathVariable Integer flag, HttpServletRequest request, Model model) {
+        Blog blog = new Blog();
+        String ipAddress = IpUtils.getIPAddress(request);
         if (flag != null) {
-            String ipAddress = IpUtils.getIPAddress(request);
-            blogService.saveLikesCache(id, flag, ipAddress);
+            blog = blogService.saveLikesCache(id, flag, ipAddress);
         }
-        return "forward:/blog/" + id;
+        model.addAttribute("blog", blog);
+        Boolean iMember = redisTemplate.opsForSet().isMember(Constants.USER_BLOG_LIKES_SET + ipAddress, id);
+        model.addAttribute("isLiked", iMember);
+        return "blog::likeDiv";
     }
 
 

@@ -36,14 +36,13 @@ public class BlogTasks {
         for (Object object : keys) {
             String key = (String)object;
             String id = key.split("_")[1];
-            Object jsonString = redisTemplate.opsForValue().get(key);
+            Object objectMap = redisTemplate.opsForValue().get(key);
             ObjectMapper objectMapper = new ObjectMapper();
-            BlogCacheDto blogViewDto = objectMapper.convertValue(jsonString, new TypeReference<BlogCacheDto>(){});
-            Integer nowView = blogViewDto.getViews();
-            if(!blogViewDto.getChanged()) continue;
-            blogService.saveViewsById(Long.parseLong(id), nowView);
-            blogViewDto.setChanged(false);
-            redisTemplate.opsForValue().set(Constants.BLOG_CACHE_KEY + id, blogViewDto);
+            BlogCacheDto blogCacheDto = objectMapper.convertValue(objectMap, new TypeReference<BlogCacheDto>(){});
+            if(!blogCacheDto.getChanged()) continue;
+            blogService.saveBlogCache(Long.parseLong(id), blogCacheDto);
+            blogCacheDto.setChanged(false);
+            redisTemplate.opsForValue().set(Constants.BLOG_CACHE_KEY + id, blogCacheDto);
         }
     }
 }
