@@ -75,7 +75,6 @@ public class BlogServiceImpl implements BlogService{
         }else{
             Blog exitsBlog = blogRepository.findById(blog.getId()).orElse(null);
             if(exitsBlog == null) throw new NotFoundException("更新的博客不存在");
-            //TODO 更新有问题，需要改 参考P36
             blog.setUpdateTime(new Date());
             BeanUtils.copyProperties(blog, exitsBlog);
             blog = exitsBlog;
